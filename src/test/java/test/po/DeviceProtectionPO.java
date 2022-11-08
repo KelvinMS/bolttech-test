@@ -104,7 +104,6 @@ public class DeviceProtectionPO extends MasterPO{
 
     public String listPriceRelations(String range) {
         Map<String, String> prices = new HashMap<String, String>();
-        ;
         prices.put("THB 2,000 - 6,000", "฿39.00");
         prices.put("THB 6,000 - 10,000", "฿59.00");
         prices.put("THB 10,001 - 15,000", "฿79.00");
