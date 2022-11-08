@@ -18,14 +18,11 @@ import test.po.MasterPO;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 import static test.po.DeviceProtectionPO.selectedPriceText;
 
 public class DeviceProtection {
-
 
 
     private final ThreadLocal<WebDriver> driver = new ThreadLocal<>();
@@ -35,6 +32,7 @@ public class DeviceProtection {
     /**
      * Setup drivers instance and thread
      * Create static shadow object
+     *
      * @param browser
      */
     private void setup(String browser) {
@@ -50,7 +48,6 @@ public class DeviceProtection {
     }
 
     /**
-     *
      * @param browser
      * @param url
      * @throws Exception
@@ -95,7 +92,7 @@ public class DeviceProtection {
         setup(browser);
         driver.get().get(url);
         DeviceProtectionPO deviceProtectionPO = new DeviceProtectionPO(driver);
-        deviceProtectionPO.selectPurchasePrice(true, randomPrice).verifyTextUnderCard(selectedPriceText);
+        deviceProtectionPO.selectPurchasePrice(true, randomPrice).verifyTextUnderCard();
         Shadow shadow = new Shadow(driver.get());
         WebElement lblPriceCard = shadow.findElementByXPath("//span[@id='dynamicPrice']");
         Assert.assertEquals(wait.until(ExpectedConditions.textToBePresentInElement(lblPriceCard, deviceProtectionPO.listPriceRelations(selectedPriceText))).booleanValue(), true, "Text under Card correspond to the relation between price range and price/month");
@@ -107,7 +104,7 @@ public class DeviceProtection {
     @Parameters({"browser", "url"})
     @Test(description = "Fourth Requirement test")
     public void fourthRequirement(@Optional("chrome") String browser,
-                                  @Optional("https://www.bolttech.co.th/en/device-protection") String url) throws Exception {
+                                  @Optional("https://www.bolttech.co.th/en/device-protection") String url) {
         setup(browser);
         driver.get().get(url);
         DeviceProtectionPO deviceProtectionPO = new DeviceProtectionPO(driver);
@@ -128,7 +125,7 @@ public class DeviceProtection {
     @Parameters({"browser", "url"})
     @Test(description = "Fiveth and Sixth Requirement test")
     public void fivethAndSixthRequirements(@Optional("chrome") String browser,
-                                           @Optional("https://www.bolttech.co.th/en/device-protection") String url) throws Exception {
+                                           @Optional("https://www.bolttech.co.th/en/device-protection") String url){
         setup(browser);
         driver.get().get(url);
         WebElement containerCheckout = new DeviceProtectionPO(driver).acessPurchase().getContainerCheckoutPage();
@@ -139,7 +136,7 @@ public class DeviceProtection {
     @Parameters({"browser", "url"})
     @Test(description = "Seventh Requirement test")
     public void seventhRequirements(@Optional("chrome") String browser,
-                                    @Optional("https://www.bolttech.co.th/en/device-protection") String url) throws Exception {
+                                    @Optional("https://www.bolttech.co.th/en/device-protection") String url){
         setup(browser);
         driver.get().get(url);
         DeviceProtectionPO deviceProtectionPO = new DeviceProtectionPO(driver);
@@ -151,28 +148,13 @@ public class DeviceProtection {
         Assert.assertEquals(shadow.findElementByXPath("//p[@class='final-price']").getText(), "฿0.00", "Final price is 0 as the 2 months is for free");
         Assert.assertEquals(shadow.findElementByXPath("//span[@id='providerName']").getText(), "bolttech", "Provider is Bolttech");
         Assert.assertEquals(shadow.findElementByXPath("//span[@id='subscriptionRenewal']").getText(), "Monthly", "Contract Renewal is set to Monthly");
-
-        //Assert da data
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        System.out.println(dtf.format(now));
-
-
-        //Assert.assertEquals(shadow.findElementByXPath("//span[@id='subscriptionStartDate']").getText(),"bolttech", "Provicer is Bolttech");
-
     }
 
-
-    //THB 36,001 - 65,000
-    //THB 26,001 - 36,000
-    //THB 15,001 - 22,000
-    //THB 10,001 - 15,000
-    //THB 2,000 - 6,000
     @AfterMethod
     private void tearDown() {
         try {
             File imagem = ((TakesScreenshot) driver.get()).getScreenshotAs(OutputType.FILE);
-            FileHandler.copy(imagem, new File(Paths.get(Paths.get(System.getProperty("user.dir"), "target", "screenshots").toString(), "screenshot" + new Random().nextInt()).toString() + ".png"));
+            FileHandler.copy(imagem, new File(Paths.get(Paths.get(System.getProperty("user.dir"), "target").toString(), "screenshot" + new Random().nextInt()).toString() + ".png"));
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error trying to take screenshot...");

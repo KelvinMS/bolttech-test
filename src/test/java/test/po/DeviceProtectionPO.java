@@ -12,22 +12,21 @@ import java.util.*;
 
 public class DeviceProtectionPO extends MasterPO{
 
+    public static String selectedPriceText;
+    private static Shadow shadow;
+
     public DeviceProtectionPO(ThreadLocal<WebDriver> driver) {
 
         super(driver);
         driver.get().findElement(By.xpath("//*[contains(text(),'Accept All Cookies')]")).click();
-    }
-
-    public static String selectedPriceText;
-    private static Shadow shadow;
-
-    public DeviceProtectionPO selectPurchasePrice(boolean especificPrice, boolean random, String... devicePrice) throws InterruptedException {
-        this.shadow = new Shadow(driver.get());
         try {
+            shadow = new Shadow(driver.get());
             shadow.setExplicitWait(25, 3);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+    }
+    public DeviceProtectionPO selectPurchasePrice(boolean especificPrice, boolean random, String... devicePrice) throws InterruptedException {
         WebElement priceDropDownButton = shadow.findElementByXPath("//*[contains(text(),'Device purchase price')]");
         wait.until(ExpectedConditions.visibilityOf(priceDropDownButton)).click();
         if (especificPrice) {
@@ -48,12 +47,6 @@ public class DeviceProtectionPO extends MasterPO{
     }
 
     public CheckoutPO acessPurchase() {
-        this.shadow = new Shadow(driver.get());
-        try {
-            shadow.setExplicitWait(25, 3);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
         wait.until(ExpectedConditions.visibilityOf(shadow.findElementByXPath("//*[contains(text(),'Device purchase price')]")));
         selectedPriceText = shadow.findElementByXPath("//span[@id='selected']").getText();
         WebElement btnSelect = shadow.findElementByXPath("//span[contains(text(),'Select')]");
@@ -66,38 +59,25 @@ public class DeviceProtectionPO extends MasterPO{
     }
 
     public String returnProductName(){
-        this.shadow = new Shadow(driver.get());
-        try {
-            shadow.setExplicitWait(25, 3);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
         return shadow.findElementByXPath("//p[@class='card-title']").getText();
 
     }
 
-    public DeviceProtectionPO verifyTextUnderCard(String priceRange) {
+    public DeviceProtectionPO verifyTextUnderCard() {
         Actions actions = new Actions(driver.get());
         WebElement cardTextPrice = shadow.findElementByXPath("//span[@id='dynamicPrice']");
         actions.moveToElement(cardTextPrice);
         return this;
     }
 
-    public DeviceProtectionPO verifyTextUnderTable(String priceRange) throws InterruptedException {
+    public DeviceProtectionPO verifyTextUnderTable(String priceRange){
         Actions actions = new Actions(driver.get());
         WebElement cardTextPrice = shadow.findElementByXPath("//div[contains(text(),'Price per month')]");
-
         actions.moveToElement(cardTextPrice).build().perform();
         return this;
     }
 
-    public DeviceProtectionPO goToMoreDetailsButton() throws InterruptedException {
-        this.shadow = new Shadow(driver.get());
-        try {
-            shadow.setExplicitWait(25, 3);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
+    public DeviceProtectionPO goToMoreDetailsButton() {
         WebElement lblSpeedRepair = shadow.findElementByXPath("//div[contains(text(),'Speed of repair (Other Metros)')]");
         ((JavascriptExecutor) driver.get()).executeScript("arguments[0].scrollIntoView({block: 'center'});", lblSpeedRepair);
         wait.until(ExpectedConditions.visibilityOf(lblSpeedRepair)).isDisplayed();
