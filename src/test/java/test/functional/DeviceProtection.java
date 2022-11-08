@@ -78,9 +78,9 @@ public class DeviceProtection {
         DeviceProtectionPO deviceProtectionPO = new DeviceProtectionPO(driver);
         deviceProtectionPO.selectPurchasePrice(true, randomPrice, betweenPrice);
         if (randomPrice) {
-            Assert.assertEquals(shadow.findElementByXPath("//span[@id='selected']").getText(), selectedPriceText, "The selected price is the current value for the Dropdown");
+            Assert.assertEquals(shadow.findElementByXPath("//span[@id='selected']").getText(), selectedPriceText, "The selected price should be the current value for the Dropdown");
         } else {
-            Assert.assertEquals(shadow.findElementByXPath("//span[@id='selected']").getText(), betweenPrice, "The selected price is the current value for the Dropdown");
+            Assert.assertEquals(shadow.findElementByXPath("//span[@id='selected']").getText(), betweenPrice, "The selected price should be the current value for the Dropdown");
         }
     }
 
